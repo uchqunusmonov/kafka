@@ -1,1 +1,0 @@
-print('forget_password')

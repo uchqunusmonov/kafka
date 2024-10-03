@@ -1,13 +1,18 @@
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 
-producer = KafkaProducer(bootstrap_servers='localhost:9092')
+# Kafka producer konfiguratsiyasi
+conf = {'bootstrap.servers': "localhost:9092"}
+producer = Producer(**conf)
 
+# Xabar yuborish funksiyasi
+def delivery_report(err, msg):
+    if err is not None:
+        print(f'Xabarni yetkazib berishda xato: {err}')
+    else:
+        print(f'Xabar muvaffaqiyatli yuborildi: {msg.topic()} [{msg.partition()}]')
 
-def send_message(msg):
-    producer.send('my-topic', msg.encode())
-
-
-if __name__ == '__main__':
-    send_message('Hello, Kafka!')
-    send_message('Hello again, Kafka!')
-    send_message('Hello, Kafka!')
+# Kafka'ga xabar yuborish
+for i in range(3):
+    value = input('Xabar kiriting: ')
+    producer.produce('my-topic', key='key', value=value, callback=delivery_report)
+producer.flush()  # Yuborilmagan xabarlar bo'lsa, ularni Kafka'ga yuboradi
