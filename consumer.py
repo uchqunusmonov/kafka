@@ -5,8 +5,10 @@ conf = {
     'bootstrap.servers': "localhost:9092",
     'group.id': "my-consumer-group",
     'auto.offset.reset': 'earliest',
-    'api.version.request': False,
+    'api.version.request': True,  # Versiya so'rovlarini yoqing
+    'security.protocol': 'PLAINTEXT',  # Faqat PLAINTEXT ulanish
 }
+
 consumer = Consumer(**conf)
 consumer.subscribe(['my-topic1'])
 
